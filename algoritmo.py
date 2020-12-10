@@ -4,6 +4,7 @@
 import random
 import numpy as np
 from nodo import Nodo
+from tupla import Tupla
 
 #CONSTANTES DEL ALGORITMO
 maximo_generaciones = 100 #Número máximo de generaciones que va a tener el algoritmo
@@ -19,7 +20,7 @@ def inicializarPoblacion():
 
     #La población inicial ya la definió el ingeniero en la tabla
     #Individuo 1
-    individuo = Nodo([1, 0, 1, 1, 0], evaluarFitness([1, 0, 1, 1, 0]), 22)
+    """ individuo = Nodo([1, 0, 1, 1, 0], evaluarFitness([1, 0, 1, 1, 0]), 22)
     poblacion.append(individuo)
     #Individuo 2
     individuo = Nodo([1, 1, 0, 0, 0], evaluarFitness([1, 1, 0, 0, 0]), 24)
@@ -29,14 +30,21 @@ def inicializarPoblacion():
     poblacion.append(individuo)
     #Individuo 4
     individuo = Nodo([1, 1, 0, 1, 1], evaluarFitness([1, 1, 0, 1, 1]), 27)
-    poblacion.append(individuo)
+    poblacion.append(individuo) """
+
+    i = 1
+    while i <= 10:
+        w1 = random.uniform(-2,2)
+        w2 = random.uniform(-2,2)
+        w3 = random.uniform(-2,2)
+        w4 = random.uniform(-2,2)
+        individuo = Nodo([w1,w2,w3,w4],evaluarFitness([w1,w2,w3,w4]))
+        poblacion.append(individuo)
+        print("individuo:",individuo.solucion, "|ValorFitness", individuo.fitness)
+        i += 1
 
     #GENERAR LA POBLACION ESTO CON UN LOOP QUE CREE CADA NODO CON VALORES ALEATORIOS DE -2 A 2
     return poblacion #Retorno la población ya creada
-
-
-
-
 
 
 """
@@ -45,36 +53,21 @@ def inicializarPoblacion():
 
 #HAY QUE AGREGAR QUE TIPO DE CRITERIO SE VA A UTILIZAR
 #HACER UN IF O UN CASE PARA VER QUE CRITERIO SE USA
-def verificarCriterio(poblacion, generacion):
-    global suma_anterior
-    suma_actual = 0
-
-    #Calculo el valor fitness de los individuos
-    for individuo in poblacion:
-        individuo.fitness = evaluarFitness(individuo.solucion)
-        individuo.x = convertirBinario(individuo.solucion)
-        suma_actual += individuo.fitness #Agrego el fitness a la suma
-
-    #Si ya llegó al máximo de generaciones lo detengo
-    if generacion >= maximo_generaciones:
-        return True
+def verificarCriterio(poblacion, generacion, tipoCriterio):
     
-    #Tomar la razón de 85% entre la suma del fitness de la generación anterior y la actual
-    #se deja como numerador la suma menor
-    if suma_anterior < suma_actual:
-        numerador = suma_anterior
-        denominador = suma_actual
-    else:
-        numerador = suma_actual
-        denominador = suma_anterior
-
-    razon = numerador / denominador
-
-    #Actualizo la suma_anterior
-    suma_anterior = suma_actual
-
-    #Verifico si ya se llegó a una razón mayor o igual a 85%
-    return True if razon >= 0.85 else None
+    #Maximo numero de generaciones
+    if tipoCriterio == 1:
+        if generacion > maximo_generaciones:
+            return True
+    elif tipoCriterio == 2:    
+        fitnessAnterior = 0
+        for individuo in poblacion:
+            individuo.fitness = evaluarFitness(individuo.solucion)
+            if fitnessAnterior == 0:
+                fitnessAnterior = individuo.fitness
+        
+        #Verifico si ya se llegó a una razón mayor o igual a 85%
+    #return True if razon >= 0.80 else None
 
 """
 *   Función que convierte un número binario a decimal
@@ -93,11 +86,28 @@ def convertirBinario(arreglo):
 *   @solucion = el número viene en un arreglo como este [0, 1, 1, 1, 0]
 """
 def evaluarFitness(solucion):
-    #f(x) = 25x - x^2
-    x = convertirBinario(solucion)
-    #Retorno el valor fitness
-    return (25 * x) - (x ** 2)
+    
+    datos = []
+    nuevaTupla = Tupla(75,50,90,65,71.75)
+    datos.append(nuevaTupla)
+    nuevaTupla = Tupla(80,95,88,80,84.65)
+    datos.append(nuevaTupla)
+    nuevaTupla = Tupla(20,55,60,58,52.45)
+    datos.append(nuevaTupla)
+    nuevaTupla = Tupla(60,28,69,50,53.9)
+    datos.append(nuevaTupla)
 
+    suma = 0
+    for dato in datos:
+        nc = solucion[0]*dato.p1 + solucion[1]*dato.p2 + solucion[2]*dato.p3 + solucion[3]*dato.p4
+        dato.nc = nc
+        suma += ((dato.nr - dato.nc)**2)
+    
+    #for dato2 in datos:
+    #   suma = dato2.
+    #    print('p1:',dato2.p1,'|p2:',dato2.p2,'|p3:',dato2.p3,'|p4:',dato2.p4,'|nr:',dato2.nr,'|nc',dato2.nc)
+       
+    return suma/ len(datos)
 
 """
 *   Función que toma a los mejores padres para luego crear una nueva generación
@@ -193,7 +203,7 @@ def emparejar(padres):
 """
 def imprimirPoblacion(poblacion):
     for individuo in poblacion:
-        print('Individuo: ', individuo.solucion, ' Valor de x: ', individuo.x, ' Fitness: ', individuo.fitness)
+        print('Individuo: ', individuo.solucion, ' Valor de NC: ', individuo.nc, ' Fitness: ', individuo.fitness)
 
 
 
@@ -208,7 +218,7 @@ def ejecutar():
 
     generacion = 0
     poblacion = inicializarPoblacion()
-    fin = verificarCriterio(poblacion, generacion)
+    """ fin = verificarCriterio(poblacion, generacion)
 
     #Imprimo la población
     print('*************** GENERACION ', generacion, " ***************")
@@ -233,7 +243,7 @@ def ejecutar():
     mejorIndividuo = arregloMejorIndividuo[0]
 
     print('\n\n*************** MEJOR INDIVIDUO***************')
-    print('Individuo: ', mejorIndividuo.solucion, ' Valor de x: ', mejorIndividuo.x, ' Fitness: ', mejorIndividuo.fitness)
+    print('Individuo: ', mejorIndividuo.solucion, ' Valor de nc: ', mejorIndividuo.nc, ' Fitness: ', mejorIndividuo.fitness) """
     
 
 
