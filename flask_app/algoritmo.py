@@ -10,10 +10,11 @@ from tupla import Tupla
 from datetime import datetime
 
 #CONSTANTES DEL ALGORITMO
-maximo_generaciones = 4000  #Número máximo de generaciones que va a tener el algoritmo
+maximo_generaciones = 0  #Número máximo de generaciones que va a tener el algoritmo
+num_poblacion = 0
 ultimo_fitness_mas_frecuente = 0
 porcentaje_ultimo_fitness = 0
-porcentaje_aceptacion = 60
+porcentaje_aceptacion = 70
 valor_fitness_promedio = 1
 datos = []
 bitacora = []
@@ -26,11 +27,11 @@ def inicializarPoblacion():
     #La población inicial ya la definió el ingeniero en la tabla    
     #individuo = Nodo([0.45, 0.2, 0.34, 0.15],evaluarFitness([0.45, 0.2, 0.34, 0.15]))
     i = 1
-    while i <= 240:
-        w1 = random.uniform(-1,1)
-        w2 = random.uniform(-1,1)
-        w3 = random.uniform(-1,1)
-        w4 = random.uniform(-1,1)
+    while i <= num_poblacion:
+        w1 = random.uniform(-2,2)
+        w2 = random.uniform(-2,2)
+        w3 = random.uniform(-2,2)
+        w4 = random.uniform(-2,2)
         individuo = Nodo([w1,w2,w3,w4],evaluarFitness([w1,w2,w3,w4]))
         poblacion.append(individuo)       
         i += 1
@@ -170,7 +171,7 @@ def mutar(solucion):
             #De nuevo por cada elemento verifico la probabilidad del 50%
             mutarElemento = random.uniform(0,1)
             if mutarElemento <= 0.5:
-                solucion[i] = random.uniform(-1,1) #Cambio el valor por nuevo elemento de -2 a 2
+                solucion[i] = random.uniform(-2,2) #Cambio el valor por nuevo elemento de -2 a 2
             break #Me salgo del ciclo
 
     return solucion #Retorno la misma solución, solo que ahora mutó
@@ -231,10 +232,15 @@ def imprimirPoblacion(poblacion):
 *   Método que ejecutará el algoritmo genético para obtener
 *   los coeficientes del filtro
 """
-def ejecutar(criterioVerifica, criterioPadres, datoscsv, nombreArchivo):
+def ejecutar(criterioVerifica, criterioPadres, datoscsv, nombreArchivo, gen, pob):
     #np.seterr(over='raise')
     global datos
     global bitacora
+    global num_poblacion
+    global maximo_generaciones
+
+    maximo_generaciones = pob
+    num_poblacion = gen
     datos = datoscsv
     
 #    print("Algoritmo corriendo")

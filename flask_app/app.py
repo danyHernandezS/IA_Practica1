@@ -30,7 +30,14 @@ def form():
             archivo = request.files['loadFile']
             criterioFin = int(request.form.get('criterioFin'))
             criterioPadres = int(request.form.get('criterioPadres'))
-            
+            gen = request.form.get('gen')
+            pob = request.form.get('pob')
+            if not gen:
+                error = 'Ingrese el máximo de generaciones'
+                return render_template('index.html', errorG = error)
+            if not pob:
+                error = 'Ingrese la cantidad'
+                return render_template('index.html', errorG = error)
             if not archivo or archivo.filename == '':
                 error = 'Ingrese el archivo de entrada CSV'
                 return render_template('index.html', errorG = error)
@@ -49,7 +56,7 @@ def form():
                 nuevaTupla = Tupla(int(linea['PROYECTO 1']),int(linea['PROYECTO 2']),int(linea['PROYECTO 3']),int(linea['PROYECTO 4']), float(linea['NOTA FINAL']))
                 datoscsv.append(nuevaTupla)
 
-            mejor_solucion = algoritmo.ejecutar(criterioFin,criterioPadres,datoscsv,archivo.filename)
+            mejor_solucion = algoritmo.ejecutar(criterioFin,criterioPadres,datoscsv,archivo.filename, int(gen), int(pob))
             modelo_generado = True
             return render_template('index.html', solucion = mejor_solucion, headers = headers, objects = algoritmo.bitacora)
         elif request.form['submit_button'] == "Calcular Nota":

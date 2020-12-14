@@ -15,8 +15,7 @@
     .column {
       float: left;
       width: 50%;
-      padding: 10px;
-      height: 300px; /* Should be removed. Only for demonstration */
+      padding: 10px;      
     }
   
     /* Clear floats after the columns */
@@ -39,6 +38,18 @@
               <div class="column">
                 <div class="container mt-3">
                   <h2>Generar Modelo</h2>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">                        
+                      <span class="input-group-text">#</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Máx. Generaciones" id="gen" name="gen"  >
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">                        
+                      <span class="input-group-text">#</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Población" id="pob" name="pob" ><br>
+                  </div>
                   <div class="custom-file mb-3">
                     <input type="file" class="custom-file-input" name="loadFile" id="customFile" >         
                     <label class="custom-file-label" for="customFile">Seleccione un archivo CSV</label>             
@@ -57,6 +68,7 @@
                     <option value = 2>Por mejor valor fitness</option>
                     <option value = 3>Solo posiciones pares</option>
                   </select>
+
                   <input type="submit" class="btn btn-primary" name="submit_button" value="Generar modelo">
                   {% if errorG %}
                     <p class=error><strong>Error:</strong> {{ errorG }}
@@ -68,25 +80,25 @@
                   <h2>Predecir nota del estudiante</h2>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">                        
-                      <span class="input-group-text">@</span>
+                      <span class="input-group-text">#</span>
                     </div>
                     <input type="text" class="form-control" placeholder="Proyecto 1" id="proyecto1" name="proyecto1"  >
                   </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">                        
-                      <span class="input-group-text">@</span>
+                      <span class="input-group-text">#</span>
                     </div>
                     <input type="text" class="form-control" placeholder="Proyecto 2" id="proyecto2" name="proyecto2" ><br>
                   </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">                        
-                      <span class="input-group-text">@</span>
+                      <span class="input-group-text">#</span>
                     </div>
                     <input type="text" class="form-control" placeholder="Proyecto 3" id="proyecto3" name="proyecto3"><br>
                   </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">                        
-                      <span class="input-group-text">@</span>
+                      <span class="input-group-text">#</span>
                     </div>
                     <input type="text" class="form-control" placeholder="Proyecto 4" id="proyecto4" name="proyecto4"><br>
                   </div>
@@ -101,9 +113,10 @@
               </div>
             </div>
             {% if solucion %}
-            <div class="row">
+            <div class="row">              
               <div class="column">
-                <div class="container mt-3">                                    
+                <div class="container mt-3">
+                  
                     <p class=error><strong>Solucion:</strong> 
                     <p>w1: {{ solucion.solucion[0] }} w2: {{ solucion.solucion[1] }}</p>                    
                     <p>w3: {{ solucion.solucion[2] }} w4: {{ solucion.solucion[3] }}</p>
@@ -111,7 +124,7 @@
                 </div>
               </div>
             </div>
-            {% endif %}           
+            {% endif %}
             <div class="row">
               <div class="column">
                 <div class="container mt-3">
