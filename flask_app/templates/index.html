@@ -1,0 +1,144 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+  
+    /* Create two equal columns that floats next to each other */
+    .column {
+      float: left;
+      width: 50%;
+      padding: 10px;
+      height: 300px; /* Should be removed. Only for demonstration */
+    }
+  
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    </style>
+</head>
+<script>    
+  $(".custom-file-input").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  });
+</script>
+    <body>
+        <form action="/practica1" method="POST" enctype="multipart/form-data">
+          <div class="row">
+              <div class="column">
+                <div class="container mt-3">
+                  <h2>Generar Modelo</h2>
+                  <div class="custom-file mb-3">
+                    <input type="file" class="custom-file-input" name="loadFile" id="customFile" >         
+                    <label class="custom-file-label" for="customFile">Seleccione un archivo CSV</label>             
+                  </div>
+                  
+                  <select name="criterioFin", id="criterioFin" class="custom-select custom-select-sm mb-3">
+                    <option value = 0>- Seleccione un criterio de finalización -</option>
+                    <option value = 1>Máximo número de generaciónes</option>
+                    <option value = 2>Porcentaje de poblacion con fitness igual</option>
+                    <option value = 3>Fitness promedio</option>
+                  </select>
+
+                  <select name="criterioPadres", id="criterioPadres" class="custom-select custom-select-sm mb-3">
+                    <option value = 0>- Seleccione un modo de seleccion de padres -</option>
+                    <option value = 1>Por torneo</option>
+                    <option value = 2>Por mejor valor fitness</option>
+                    <option value = 3>Solo posiciones pares</option>
+                  </select>
+                  <input type="submit" class="btn btn-primary" name="submit_button" value="Generar modelo">
+                  {% if errorG %}
+                    <p class=error><strong>Error:</strong> {{ errorG }}
+                  {% endif %}                  
+                </div>                                                                 
+              </div>
+              <div class="column">
+                <div class="container mt-3">
+                  <h2>Predecir nota del estudiante</h2>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">                        
+                      <span class="input-group-text">@</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Proyecto 1" id="proyecto1" name="proyecto1"  >
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">                        
+                      <span class="input-group-text">@</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Proyecto 2" id="proyecto2" name="proyecto2" ><br>
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">                        
+                      <span class="input-group-text">@</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Proyecto 3" id="proyecto3" name="proyecto3"><br>
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">                        
+                      <span class="input-group-text">@</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Proyecto 4" id="proyecto4" name="proyecto4"><br>
+                  </div>
+                <input type="submit" class="btn btn-primary" name="submit_button" value="Calcular Nota">
+                {% if error %}
+                  <p class=error><strong>Error:</strong> {{ error }}
+                {% endif %}
+                {% if nc %}
+                  <p class=result><strong>Nota Calculada:</strong> {{ nc }}
+                {% endif %}
+                </div>
+              </div>
+            </div>
+            {% if solucion %}
+            <div class="row">
+              <div class="column">
+                <div class="container mt-3">                                    
+                    <p class=error><strong>Solucion:</strong> 
+                    <p>w1: {{ solucion.solucion[0] }} w2: {{ solucion.solucion[1] }}</p>                    
+                    <p>w3: {{ solucion.solucion[2] }} w4: {{ solucion.solucion[3] }}</p>
+                    <p>Fitness: {{ solucion.fitness }}</p>                  
+                </div>
+              </div>
+            </div>
+            {% endif %}           
+            <div class="row">
+              <div class="column">
+                <div class="container mt-3">
+                  <h2>Bitácora</h2>                 
+                    <table id='result' class='table'>
+                      <thead>
+                        <tr>
+                        {% for header in headers %}
+                          <th>{{header}}</th>
+                        {% endfor %}
+                        </tr>
+                      </thead>
+                      {% if objects %}
+                        <tbody>
+                        {% for object in objects %} 
+                          <tr>
+                        {% for k, val in object.items() %}
+                            <td>{{val}}</td>
+                          {% endfor %}
+                          </tr>
+                        {% endfor %}        
+                        </tbody>                    
+                      {% endif %}
+                  </table>
+                </div>                
+              </div>
+            </div>          
+        </form>
+    </body>
+</html>
