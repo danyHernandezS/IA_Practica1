@@ -239,8 +239,8 @@ def ejecutar(criterioVerifica, criterioPadres, datoscsv, nombreArchivo, gen, pob
     global num_poblacion
     global maximo_generaciones
 
-    maximo_generaciones = pob
-    num_poblacion = gen
+    maximo_generaciones = gen
+    num_poblacion = pob
     datos = datoscsv
     
 #    print("Algoritmo corriendo")
